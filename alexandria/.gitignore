@@ -1,0 +1,10 @@
+/android/build
+/app/build
+/gradle/wrapper
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea
+.DS_Store
+/build
+*.iml
