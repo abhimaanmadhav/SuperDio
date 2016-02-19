@@ -40,7 +40,7 @@ public class myFetchService extends IntentService
 {
     private final String LOG_TAG = "myFetchService", ACTION_RETRY = "retry";
     private final String UNSUCESSFULL_RETRY = "unsucessfull";
-    private final int RETRY_INTERVAL = 10 * 1000 * 1;
+    private final int RETRY_INTERVAL = 10 * 1000 * 15;
     private final int MAX_RETRY = 5;
 
     public myFetchService()
@@ -162,6 +162,8 @@ public class myFetchService extends IntentService
 
                             if (timeFrame.equals("p2"))
                                 {
+                                    //Retry logic using alarm manger when data is not availalbe
+
                                     retryLater(intent);
                                 }
                         }
@@ -187,17 +189,18 @@ public class myFetchService extends IntentService
                             getSystemService(Context
                                     .ALARM_SERVICE);
                     Calendar c = Calendar.getInstance();
+                    //exponential retry mechanism
                     c.setTimeInMillis(c.getTimeInMillis() + ((++retries)
                             * RETRY_INTERVAL));
                     sharedPreferences.edit().putInt(UNSUCESSFULL_RETRY,
                             retries)
                             .commit();
-                    Intent Pintent = new Intent
+                    Intent pIntent = new Intent
                             (this, myFetchService
                                     .class);
-                    Pintent.setAction(ACTION_RETRY);
+                    pIntent.setAction(ACTION_RETRY);
                     PendingIntent pendingIntent = PendingIntent.getService
-                            (this, 99, Pintent
+                            (this, 99, pIntent
                                     , PendingIntent
                                     .FLAG_UPDATE_CURRENT);
 

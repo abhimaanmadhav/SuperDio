@@ -60,9 +60,9 @@ public class FootballAppWidget extends AppWidgetProvider
             // Enter relevant functionality for when the first widget is created
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, 12);
-            c.set(Calendar.MINUTE, 31);
-            c.set(Calendar.SECOND, 00);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 30);
             pendingIntent = PendingIntent.getBroadcast(context, 99, new Intent
                     (FootballAppWidget.ACTION_DAY_CHANGE), PendingIntent.FLAG_UPDATE_CURRENT);
             // 8 hour window as i used need a trigger when the phone wakes up
@@ -81,26 +81,31 @@ public class FootballAppWidget extends AppWidgetProvider
     @Override
     public void onReceive(Context context, Intent intent)
         {
-            Log.d("onReceive", "action "+intent.getAction());
+            Log.d("onReceive", "action " + intent.getAction());
             if (ACTION_DATA_UPDATED.equalsIgnoreCase(intent.getAction()))
                 {
-                    Log.e("onReceive", "action "+intent.getAction());
+                    Log.e("onReceive", "action " + intent.getAction());
 
-                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance
-                            (context);
-                    ComponentName thisAppWidget = new ComponentName(context
-                            .getPackageName(), FootballAppWidget.class.getName());
-                    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
-                    onUpdate(context, appWidgetManager, appWidgetIds);
+                    updateWidget(context);
                 } else if (ACTION_DAY_CHANGE.equalsIgnoreCase(intent.getAction()))
                 {
-                    Log.e("onReceive", "action "+intent.getAction());
+                    //Alarm for day to change data a 0 hours
+                    Log.e("onReceive", "action " + intent.getAction());
                     context.startService(new Intent(context, myFetchService.class));
+                    updateWidget(context);
                 }
             super.onReceive(context, intent);
 
         }
 
-
+    void updateWidget(Context context)
+        {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance
+                    (context);
+            ComponentName thisAppWidget = new ComponentName(context
+                    .getPackageName(), FootballAppWidget.class.getName());
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+            onUpdate(context, appWidgetManager, appWidgetIds);
+        }
 }
 

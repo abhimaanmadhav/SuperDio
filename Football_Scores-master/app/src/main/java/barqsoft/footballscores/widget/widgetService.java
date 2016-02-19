@@ -83,6 +83,7 @@ int mAppWidgetId;
                         .widget_list_item);
                 view.setTextViewText(R.id.home_name, mCursor.getString(scoresAdapter.COL_HOME));
                 view.setTextViewText(R.id.away_name, mCursor.getString(scoresAdapter.COL_AWAY));
+                Log.e("away name","name "+ mCursor.getString(scoresAdapter.COL_AWAY));
                 view.setTextViewText(R.id.data_textview, mCursor.getString(scoresAdapter
                         .COL_MATCHTIME));
                 view.setTextViewText(R.id.score_textview, Utilies.getScores(mCursor.getInt
