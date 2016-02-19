@@ -19,17 +19,21 @@ public class About extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
+        ((MainActivity)getActivity()).hideKeyboard();
         return rootView;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activity.setTitle(R.string.about);
+    public void onAttach(Activity activity)
+        {
+            super.onAttach(activity);
+            getActivity().setTitle(R.string.about);
     }
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
         getActivity().setTitle(R.string.about);
     }

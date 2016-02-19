@@ -34,12 +34,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT = "eanContent";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
     int SCANREQUESTCODE = 007;
-    private String mScanFormat = "Format:";
-    private String mScanContents = "Contents:";
-
 
     public AddBook()
         {
@@ -59,7 +54,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState)
         {
-
+setHasOptionsMenu(true);
             rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
             ean = (EditText) rootView.findViewById(R.id.ean);
 
@@ -253,7 +248,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             super.onAttach(activity);
             activity.setTitle(R.string.scan);
         }
+    //title not set in 23 above
+    @Override
+    public void onAttach(Context activity)
+        {
+            super.onAttach(activity);
+            getActivity().setTitle(R.string.scan);
 
+        }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
         {

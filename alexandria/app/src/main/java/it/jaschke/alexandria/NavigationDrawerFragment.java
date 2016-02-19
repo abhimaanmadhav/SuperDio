@@ -1,12 +1,12 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -63,7 +63,9 @@ public class NavigationDrawerFragment extends Fragment
     public NavigationDrawerFragment()
         {
         }
-
+public int getSelectedPosition(){
+    return mCurrentSelectedPosition;
+}
     @Override
     public void onCreate(Bundle savedInstanceState)
         {
@@ -90,14 +92,14 @@ public class NavigationDrawerFragment extends Fragment
 
         }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-        {
-            super.onActivityCreated(savedInstanceState);
-            // Indicate that this fragment would like to influence the set of actions in the
-            // action bar.
-            setHasOptionsMenu(true);
-        }
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState)
+//        {
+//            super.onActivityCreated(savedInstanceState);
+//            // Indicate that this fragment would like to influence the set of actions in the
+//            // action bar.
+//            setHasOptionsMenu(true);
+//        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -294,7 +296,7 @@ public class NavigationDrawerFragment extends Fragment
             if (mDrawerLayout != null && isDrawerOpen())
                 {
                     inflater.inflate(R.menu.main, menu);
-                    showGlobalContextActionBar();
+//                    showGlobalContextActionBar();
                 }
             super.onCreateOptionsMenu(menu, inflater);
         }
@@ -329,7 +331,7 @@ public class NavigationDrawerFragment extends Fragment
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks
+    public  interface NavigationDrawerCallbacks
     {
         /**
          * Called when an item in the navigation drawer is selected.

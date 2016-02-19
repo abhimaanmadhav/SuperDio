@@ -1,5 +1,6 @@
 package it.jaschke.alexandria;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,9 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.api.Callback;
@@ -35,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private CharSequence title;
     public static boolean IS_TABLET = false;
     private BroadcastReceiver messageReciever;
-
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
     public static final String MESSAGE_DETAILS_AVAILABLE = "MESSAGE_DETAILS_AVAILABLE";
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         {
             super.onCreate(savedInstanceState);
             IS_TABLET = isTablet();
+
             if (IS_TABLET)
                 {
                     setContentView(R.layout.activity_main_tablet);
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever, filter);
 
             navigationDrawerFragment = (NavigationDrawerFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
             title = getTitle();
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public void onNavigationDrawerItemSelected(int position)
         {
 
+            int temp = position;
             android.app.FragmentManager fragmentManager = getFragmentManager();
             Fragment nextFragment;
 
@@ -80,33 +84,34 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     default:
                     case 0:
                         nextFragment = new ListOfBooks();
+
                         break;
                     case 1:
                         nextFragment = new AddBook();
+
                         break;
                     case 2:
                         nextFragment = new About();
+
                         break;
 
                 }
-
+            for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++)
+                {
+                    fragmentManager.popBackStack();
+                }
             fragmentManager.beginTransaction()
                     .replace(R.id.container, nextFragment)
-                    .addToBackStack((String) title)
+//                    .addToBackStack((String) title)
                     .commit();
         }
-
+@Override
     public void setTitle(int titleId)
         {
             title = getString(titleId);
+            super.setTitle(titleId);
         }
 
-    public void restoreActionBar()
-        {
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(title);
-        }
 
 
     @Override
@@ -118,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     // if the drawer is not showing. Otherwise, let the drawer
                     // decide what to show in the action bar.
                     getMenuInflater().inflate(R.menu.main, menu);
-                    restoreActionBar();
                     return true;
                 }
             return super.onCreateOptionsMenu(menu);
@@ -164,9 +168,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 }
             getFragmentManager().beginTransaction()
                     .replace(id, fragment)
-                    .addToBackStack("Book Detail")
+                    .addToBackStack("Book details")
                     .commit();
-
+            Log.e("sdfa", "item selected count " + getFragmentManager().getBackStackEntryCount());
         }
 
     private class MessageReciever extends BroadcastReceiver
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     public void goBack(View view)
         {
-            getSupportFragmentManager().popBackStack();
+            onBackPressed();
         }
 
     private boolean isTablet()
@@ -200,12 +204,28 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     @Override
     public void onBackPressed()
         {
-            if (getSupportFragmentManager().getBackStackEntryCount() < 2)
+            Log.e("sdfa", "count " + getFragmentManager().getBackStackEntryCount());
+            //quit the app from book details screen now only quits if we are in landspace mode
+            if (findViewById(R.id.right_container) != null)
                 {
                     finish();
+                    return;
+                }
+            //quit the app from any screen about,list,scan screen it done in this was becuase user can navigate using navigation drawer
+            if (getFragmentManager().getBackStackEntryCount() >= 1)
+                {
+                    getFragmentManager().popBackStack();
+                    return;
                 }
             super.onBackPressed();
+
         }
 
-
+    public void hideKeyboard()
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getWindow().getDecorView()
+                    .getWindowToken(), 0);
+        }
 }

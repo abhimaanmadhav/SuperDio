@@ -120,7 +120,7 @@ public class BookService extends IntentService
             BufferedReader reader = null;
             String bookJsonString = null;
             sendMsg(R
-                        .string.featching_details);
+                    .string.featching_details);
 
             try
                 {
@@ -144,7 +144,7 @@ public class BookService extends IntentService
                     if (inputStream == null)
                         {
                             //when der is not response the app crashes
-                                    sendMsg(R.string.book_details_failure);
+                            sendMsg(R.string.book_details_failure);
                             return;
                         }
 
@@ -200,11 +200,14 @@ public class BookService extends IntentService
             try
                 {
                     //when der is not response the app crashes
+                    Log.e("book service", "respose" + bookJsonString);
+                    Log.e("book service", "bookJsonString " + (bookJsonString == null));
                     if (bookJsonString == null)
                         {
                             sendMsg(R.string.book_details_failure);
                             return;
                         }
+                    Log.e("book service", "\n" + bookJsonString);
                     JSONObject bookJson = new JSONObject(bookJsonString);
                     JSONArray bookArray;
                     if (bookJson.has(ITEMS))
@@ -243,10 +246,13 @@ public class BookService extends IntentService
                         }
 
                     writeBackBook(ean, title, subtitle, desc, imgUrl);
-
+// would have crashed when no auth information available. ex try isbn=9788175257665
                     if (bookInfo.has(AUTHORS))
                         {
                             writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
+                        } else
+                        {
+                            writeBackAuthors(ean, new JSONArray("[\"Author info missing\"]"));
                         }
                     if (bookInfo.has(CATEGORIES))
                         {
@@ -300,11 +306,13 @@ public class BookService extends IntentService
                     values = new ContentValues();
                 }
         }
-    private void sendMsg(int msgID){
-        Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-        messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources()
-                .getString(msgID));
-        LocalBroadcastManager.getInstance(getApplicationContext())
-                .sendBroadcast(messageIntent);
-    }
+
+    private void sendMsg(int msgID)
+        {
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources()
+                    .getString(msgID));
+            LocalBroadcastManager.getInstance(getApplicationContext())
+                    .sendBroadcast(messageIntent);
+        }
 }
