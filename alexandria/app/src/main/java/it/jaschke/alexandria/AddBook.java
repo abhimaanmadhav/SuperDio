@@ -54,7 +54,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState)
         {
-setHasOptionsMenu(true);
+            setHasOptionsMenu(true);
             rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
             ean = (EditText) rootView.findViewById(R.id.ean);
 
@@ -99,9 +99,9 @@ setHasOptionsMenu(true);
 //                Toast toast = Toast.makeText(context, text, duration);
 //                toast.show();
                         ean.clearFocus();
-                                Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                                intent.setAction("com.google.zxing.client.android.SCAN");
-                                startActivityForResult(intent, SCANREQUESTCODE);
+                        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                        intent.setAction("com.google.zxing.client.android.SCAN");
+                        startActivityForResult(intent, SCANREQUESTCODE);
                     }
             });
 
@@ -206,7 +206,11 @@ setHasOptionsMenu(true);
             String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry
                     .AUTHOR));
             String[] authorsArr = authors.split(",");
-            ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+            Log.e("addbook"," is null "+authorsArr);
+//            if (authors != null)
+//                {
+                    ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+//                }
             ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
             String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry
                     .IMAGE_URL));
@@ -248,6 +252,7 @@ setHasOptionsMenu(true);
             super.onAttach(activity);
             activity.setTitle(R.string.scan);
         }
+
     //title not set in 23 above
     @Override
     public void onAttach(Context activity)
@@ -256,6 +261,7 @@ setHasOptionsMenu(true);
             getActivity().setTitle(R.string.scan);
 
         }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
         {
